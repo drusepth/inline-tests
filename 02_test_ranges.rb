@@ -1,5 +1,3 @@
-require 'pry'
-
 RUN_TESTS_IN_THIS_ENVIRONMENT = true # use RAILS_ENV==development or something instead
 
 def tested method_name, tests_block
