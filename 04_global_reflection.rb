@@ -32,44 +32,57 @@ module Kernel
 
   def assert some_statement, description = ''
     passed = some_statement
-
-    preassert "   #{passed ? 'PASSED' : 'FAILED'} #{description}"
-    postassert terminal: !passed, test_type: 'assert', description: description
+    if passed
+      true
+    else
+      raise InlineTestFailure.new(@@method_being_tested, 'assert', some_statement, nil, description) unless passed
+    end
   end
 
   def assert_equal lhs, rhs, description = ''
     passed = flexible_assert lhs, rhs, "[lhs] == [rhs]"
 
-    preassert "   #{passed ? 'PASSED' : 'FAILED'} #{description} (#{lhs} == #{rhs})"
-    postassert terminal: !passed, test_type: 'assert_equal', lhs: lhs, rhs: rhs, description: description
+    if passed
+      true
+    else
+      raise InlineTestFailure.new(@@method_being_tested, 'assert_equal', lhs, rhs, description) unless passed
+    end
   end
 
   def assert_not_equal lhs, rhs, description = ''
     passed = flexible_assert lhs, rhs, "[lhs] != [rhs]"
-
-    preassert "   #{passed ? 'PASSED' : 'FAILED'} #{description} (#{lhs} != #{rhs})"
-    postassert terminal: !passed, test_type: 'assert_not_equal', lhs: lhs, rhs: rhs, description: description
+    if passed
+      true
+    else
+      raise InlineTestFailure.new(@@method_being_tested, 'assert_not_equal', lhs, rhs, description) unless passed
+    end
   end
 
   def assert_less_than lhs, rhs, description = ''
     passed = flexible_assert lhs, rhs, "[lhs] < [rhs]"
-
-    preassert "   #{passed ? 'PASSED' : 'FAILED'} #{description} (#{lhs} < #{rhs})"
-    postassert terminal: !passed, test_type: 'assert_less_than', lhs: lhs, rhs: rhs, description: description
+    if passed
+      true
+    else
+      raise InlineTestFailure.new(@@method_being_tested, 'assert_less_than', lhs, rhs, description) unless passed
+    end
   end
 
   def assert_greater_than lhs, rhs, description = ''
     passed = flexible_assert lhs, rhs, "[lhs] > [rhs]"
-
-    preassert "   #{passed ? 'PASSED' : 'FAILED'} #{description} (#{lhs} > #{rhs})"
-    postassert terminal: !passed, test_type: 'assert_greater_than', lhs: lhs, rhs: rhs, description: description
+    if passed
+      true
+    else
+      raise InlineTestFailure.new(@@method_being_tested, 'assert_greater_than', lhs, rhs, description) unless passed
+    end
   end
 
   def assert_divisible_by lhs, rhs, description = ''
     passed = flexible_assert lhs, rhs, "[lhs] % [rhs] == 0"
-
-    preassert "   #{passed ? 'PASSED' : 'FAILED'} #{description} (#{lhs} % #{rhs}) == 0"
-    postassert terminal: !passed, test_type: 'assert_divisible_by', lhs: lhs, rhs: rhs, description: description
+    if passed
+      true
+    else
+      raise InlineTestFailure.new(@@method_being_tested, 'assert_divisible_by', lhs, rhs, description) unless passed
+    end
   end
 
   # dirty hacks for global constants :(
@@ -77,10 +90,6 @@ module Kernel
   module NaN;      def to_s; 0 * Float::INFINITY; end; end
 
   private
-
-  def preassert message
-    #puts message
-  end
 
   def flexible_assert lhs, rhs, assert_logic
     lhs_values = lhs
@@ -99,24 +108,6 @@ module Kernel
         eval generated_source
       end
     end
-  end
-
-  def postassert terminal: false, test_type: nil, lhs: nil, rhs: nil, description: nil
-    if terminal
-      method = @@method_being_tested # probably not threadsafe
-
-      puts [
-        "Method #{method.receiver.to_s}::#{method.name} ",
-        "[#{method.source_location.first} line #{method.source_location.last}]",
-        "(parameters #{method.parameters}) ",
-        "FAILED assertion"
-      ].join
-      puts method.comment if method.methods.include? :comment
-      puts method.source  if method.methods.include? :source
-      raise InlineTestFailure.new(method, test_type, lhs, rhs, description)
-    end
-
-    !terminal
   end
 end
 
