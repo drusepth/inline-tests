@@ -1,13 +1,14 @@
-RUN_TESTS_IN_THIS_ENVIRONMENT = true # set true with test suite running tool
+RUN_TESTS_IN_THIS_ENVIRONMENT = false # can be set to true for tests running alongside code in dev mode
 
 module Kernel
-  def tested method_name, tests_block
+  METHODS_WITH_INLINE_TESTS = []
+
+  def tested method_name, _, &inline_test_block
     method = method(method_name)
-    @@method_being_tested = method
-    if RUN_TESTS_IN_THIS_ENVIRONMENT
-      puts "Testing method #{method.receiver.to_s}::#{method_name}"
-      yield method
-    end
+    method.inline_tests = inline_test_block
+    METHODS_WITH_INLINE_TESTS << method
+
+    yield method if RUN_TESTS_IN_THIS_ENVIRONMENT
   end
   def tests; end
 
@@ -97,11 +98,15 @@ module Kernel
       puts method.source
       exit
     end
+
+    !terminal
   end
 end
 
 # Extend Method class so we can use a shorthand for .call
 class Method
+  attr_accessor :inline_tests
+
   def [] *parameters
     homogenized_parameters = homogenized_list_of_arrays parameters
 
@@ -118,6 +123,10 @@ class Method
     else
       permutation_lookup
     end
+  end
+
+  def run_inline_tests
+    inline_tests.call self if inline_tests && inline_tests.respond_to?(:call)
   end
 
   private
