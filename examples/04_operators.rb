@@ -16,7 +16,7 @@ tested def subtract x, y
 end,
 tests do |f|
   assert_equal f[555, 0], 555,                                   '555 - 0 = 555'
-  assert_greater_than f[10_000, (0..9_999)], 0,                  'subtracting n from m where n < m should be greater than 0',
+  assert_greater_than f[10_000, (0..9_999)], 0,                  'subtracting n from m where n < m should be greater than 0'
   assert_equal f[Float::INFINITY, (0..10_000)], Float::INFINITY, 'subtracting anything from infinity should still be infinity'
 end
 
