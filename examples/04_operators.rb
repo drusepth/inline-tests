@@ -40,8 +40,6 @@ tests do |f|
   assert_equal f.(0, 3), 0,               '0 / 3 = 0'
   assert_equal f.(6, 3), 2,               '6 / 3 = 2'
   assert_equal f.(3, 0), Float::INFINITY, 'dividing by zero results in infinity'
-
-  # Range tests
   assert_equal f[(0..10_000), 0], Float::INFINITY,  'anything / 0 == infinity'
   assert_equal f[0, (1..10_000)], 0,                '0 / anything == 0'
 end
