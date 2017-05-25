@@ -66,7 +66,7 @@ tests do |f|
   assert f.(3, 0) == Float::INFINITY, 'dividing by zero results in infinity'
 
   # Range tests
-  assert f[(0..10_000), 0] == Float::INFINITY,  '0 / anything == 0'
+  assert f[(0..10_000), 0] == Float::INFINITY,  'anything / 0 == infinity'
 end
 
 
