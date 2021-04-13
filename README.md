@@ -21,7 +21,7 @@ tested def integer_division(x, y)
   return Float::INFINITY if y.zero?
   x.to_i / y.to_i
 end,
-tests do |integer_division|
+tests do
   assert integer_division(6, 3) == 2, "divides correctly"
   assert integer_division(5, 3) == 1, "uses integer division"
   assert integer_division(0, 3) == 0, "0 / anything = 0"
