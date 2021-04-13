@@ -1,5 +1,6 @@
 module Kernel
   METHODS_WITH_INLINE_TESTS     = []
+
   RUN_TESTS_IN_THIS_ENVIRONMENT = true
 
   def tested(method_name, _ignored, &inline_test_block)

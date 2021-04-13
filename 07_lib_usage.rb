@@ -22,4 +22,4 @@ tests do
   assert integer_division(3, 0) == Float::INFINITY
 end
 
-puts InlineTests.run!
+InlineTests.run!
