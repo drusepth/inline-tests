@@ -9,6 +9,7 @@ class InlineTests
     method_passing = Hash.new(false)
     method_errors  = {}
 
+    puts "Starting test run..."
     tested_methods.select do |method|
       Kernel.class_variable_set(:@@method_being_tested, method)
       method_signature = "#{method.receiver}::#{method.name}"
