@@ -44,3 +44,19 @@ tests do |this|
   assert_equal        this[0, 0],          0, '0 + 0 = 0'
 end
 ```
+
+## Example output
+
+In order to run the test suite, all you need to do is call `InlineTests.run!` from anywhere.
+
+```bash
+$ ruby 07_lib_usage.rb 
+Starting inline test suite:
+  main::add - PASSED (0.000000271 seconds)
+  main::integer_division - PASSED (0.000000239 seconds)
+  main::multiply - PASSED (0.000000292 seconds)
+  main::divide - PASSED (0.000000196 seconds)
+4 inline tests ran in 0.000049601 seconds.
+  4 PASSED
+  0 FAILS
+```
