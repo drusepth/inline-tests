@@ -1,4 +1,4 @@
-RUN_TESTS_IN_THIS_ENVIRONMENT = false # can be set to true for tests running alongside code in dev mode
+RUN_TESTS_IN_THIS_ENVIRONMENT = true # can be set to true for tests running alongside code in dev mode
 
 class InlineTestFailure < StandardError
   attr_accessor :method, :test_type, :lhs, :rhs, :description
@@ -22,11 +22,13 @@ module Kernel
   METHODS_WITH_INLINE_TESTS = []
 
   def tested(method_name, _, &inline_test_block)
+    return unless RUN_TESTS_IN_THIS_ENVIRONMENT
+
     method = method(method_name)
     method.inline_tests = inline_test_block
     METHODS_WITH_INLINE_TESTS << method
 
-    yield method if RUN_TESTS_IN_THIS_ENVIRONMENT
+    yield method
   end
   def tests; end
 
