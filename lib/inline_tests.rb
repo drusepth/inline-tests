@@ -10,7 +10,7 @@ class InlineTests
     puts "Starting inline test suite:"
     all_tests_start_time = Time.now
     tested_methods.select do |method|
-      # Kernel.class_variable_set(:@@method_being_tested, method)
+      Kernel.class_variable_set(:@@method_being_tested, method)
       
       method_signature = if method.receiver.class.name === Object.name
         # If the receiver is an Object, it's probably #main, in which case we can just print it directly
@@ -27,6 +27,7 @@ class InlineTests
 
       start_time  = Time.now
       begin
+        method.run_inline_tests # Throws an exception on fail
         test_time    = Time.now - start_time
         test_passes += 1
 
