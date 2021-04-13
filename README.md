@@ -29,6 +29,14 @@ tests do
 end
 ```
 
+You can also flag methods that need tests but don't have them yet with the `untested` prefix. For example:
+```ruby
+untested def integer_division(x, y)
+  return Float::INFINITY if y.zero?
+  x.to_i / y.to_i
+end
+```
+
 ## Fuzzy testing
 
 This library also supports fuzzy testing. To use it, define a variable (e.g. `this` below) on your tests block and pass a _range_ for

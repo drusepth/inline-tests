@@ -44,6 +44,9 @@ module Kernel
   end
   def tests; end
 
+  # This is just syntax sugar for decorating methods that are untested / need tests
+  def untested(method_name); end
+
   def assert(some_statement, description = '')
     passed = !!some_statement
     raise InlineTestFailure.new('assert', some_statement, nil, description) unless passed
