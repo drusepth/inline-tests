@@ -3,7 +3,7 @@ RUN_TESTS_IN_THIS_ENVIRONMENT = false # can be set to true for tests running alo
 class InlineTestFailure < StandardError
   attr_accessor :method, :test_type, :lhs, :rhs, :description
 
-  def initialize method, test_type=nil, lhs=nil, rhs=nil, description=nil
+  def initialize(method, test_type=nil, lhs=nil, rhs=nil, description=nil)
     super [
       "#{description} FAILED:",
       "      test_type: #{test_type}",
@@ -21,7 +21,7 @@ end
 module Kernel
   METHODS_WITH_INLINE_TESTS = []
 
-  def tested method_name, _, &inline_test_block
+  def tested(method_name, _, &inline_test_block)
     method = method(method_name)
     method.inline_tests = inline_test_block
     METHODS_WITH_INLINE_TESTS << method
@@ -30,42 +30,42 @@ module Kernel
   end
   def tests; end
 
-  def assert some_statement, description = ''
+  def assert(some_statement, description = '')
     passed = !!some_statement
     raise InlineTestFailure.new(@@method_being_tested, 'assert', some_statement, nil, description) unless passed
 
     passed
   end
 
-  def assert_equal lhs, rhs, description = ''
+  def assert_equal(lhs, rhs, description = '')
     passed = !!flexible_assert(lhs, rhs, "[lhs] == [rhs]")
     raise InlineTestFailure.new(@@method_being_tested, 'assert_equal', lhs, rhs, description) unless passed
 
     passed
   end
 
-  def assert_not_equal lhs, rhs, description = ''
+  def assert_not_equal(lhs, rhs, description = '')
     passed = !!flexible_assert(lhs, rhs, "[lhs] != [rhs]")
     raise InlineTestFailure.new(@@method_being_tested, 'assert_not_equal', lhs, rhs, description) unless passed
 
     passed
   end
 
-  def assert_less_than lhs, rhs, description = ''
+  def assert_less_than(lhs, rhs, description = '')
     passed = !!flexible_assert(lhs, rhs, "[lhs] < [rhs]")
     raise InlineTestFailure.new(@@method_being_tested, 'assert_less_than', lhs, rhs, description) unless passed
     
     passed
   end
 
-  def assert_greater_than lhs, rhs, description = ''
+  def assert_greater_than(lhs, rhs, description = '')
     passed = !!flexible_assert(lhs, rhs, "[lhs] > [rhs]")
     raise InlineTestFailure.new(@@method_being_tested, 'assert_greater_than', lhs, rhs, description) unless passed
     
     passed
   end
 
-  def assert_divisible_by lhs, rhs, description = ''
+  def assert_divisible_by(lhs, rhs, description = '')
     passed = !!flexible_assert(lhs, rhs, "[lhs] % [rhs] == 0")
     raise InlineTestFailure.new(@@method_being_tested, 'assert_divisible_by', lhs, rhs, description) unless passed
     
@@ -102,12 +102,12 @@ end
 class Method
   attr_accessor :inline_tests
 
-  def [] *parameters
-    homogenized_parameters = homogenized_list_of_arrays parameters
+  def [](*parameters)
+    homogenized_parameters = homogenized_list_of_arrays(parameters)
 
     permutation_lookup = {}
 
-    all_range_permutations = permutations_of_list_of_ranges homogenized_parameters
+    all_range_permutations = permutations_of_list_of_ranges(homogenized_parameters)
     all_range_permutations.each do |parameter_permutation|
       permutation_lookup[parameter_permutation] = call(*parameter_permutation)
     end
@@ -126,11 +126,11 @@ class Method
 
   private
 
-  def homogenized_list_of_arrays heterogenous_list
+  def homogenized_list_of_arrays(heterogenous_list)
     heterogenous_list.map { |param| Array(param) }
   end
 
-  def permutations_of_list_of_ranges list_of_ranges
+  def permutations_of_list_of_ranges(list_of_ranges)
     receiver, *method_arguments = list_of_ranges
     receiver.product(*method_arguments)
   end
