@@ -10,8 +10,20 @@ class InlineTests
     puts "Starting inline test suite:"
     all_tests_start_time = Time.now
     tested_methods.select do |method|
-      Kernel.class_variable_set(:@@method_being_tested, method)
-      method_signature = "#{method.receiver}::#{method.name}"
+      # Kernel.class_variable_set(:@@method_being_tested, method)
+      
+      method_signature = if method.receiver.class.name === Object.name
+        # If the receiver is an Object, it's probably #main, in which case we can just print it directly
+        "#{method.receiver}::#{method.name}"
+
+      elsif method.receiver.class.name == Class.name
+        # If the receiver is the base Class, then we're dealing with a class method so we have a class ref already
+        "#{method.receiver.name}::self.#{method.name}"
+
+      else
+        # If the receiver is some child class class, we want to use the class name in printable output
+        "#{method.receiver.class.name}::#{method.name}"
+      end
 
       start_time  = Time.now
       begin
