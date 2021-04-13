@@ -89,6 +89,9 @@ module Kernel
     passed
   end
 
+  # TODO: assert_positive
+  # TODO: assert_negative
+
   # dirty hacks for global constants :(
   module Infinity; def to_s; Float::INFINITY;     end; end
   module NaN;      def to_s; 0 * Float::INFINITY; end; end
