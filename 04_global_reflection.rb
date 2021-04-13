@@ -31,58 +31,45 @@ module Kernel
   def tests; end
 
   def assert some_statement, description = ''
-    passed = some_statement
-    if passed
-      true
-    else
-      raise InlineTestFailure.new(@@method_being_tested, 'assert', some_statement, nil, description) unless passed
-    end
+    passed = !!some_statement
+    raise InlineTestFailure.new(@@method_being_tested, 'assert', some_statement, nil, description) unless passed
+
+    passed
   end
 
   def assert_equal lhs, rhs, description = ''
-    passed = flexible_assert lhs, rhs, "[lhs] == [rhs]"
+    passed = !!flexible_assert(lhs, rhs, "[lhs] == [rhs]")
+    raise InlineTestFailure.new(@@method_being_tested, 'assert_equal', lhs, rhs, description) unless passed
 
-    if passed
-      true
-    else
-      raise InlineTestFailure.new(@@method_being_tested, 'assert_equal', lhs, rhs, description) unless passed
-    end
+    passed
   end
 
   def assert_not_equal lhs, rhs, description = ''
-    passed = flexible_assert lhs, rhs, "[lhs] != [rhs]"
-    if passed
-      true
-    else
-      raise InlineTestFailure.new(@@method_being_tested, 'assert_not_equal', lhs, rhs, description) unless passed
-    end
+    passed = !!flexible_assert(lhs, rhs, "[lhs] != [rhs]")
+    raise InlineTestFailure.new(@@method_being_tested, 'assert_not_equal', lhs, rhs, description) unless passed
+
+    passed
   end
 
   def assert_less_than lhs, rhs, description = ''
-    passed = flexible_assert lhs, rhs, "[lhs] < [rhs]"
-    if passed
-      true
-    else
-      raise InlineTestFailure.new(@@method_being_tested, 'assert_less_than', lhs, rhs, description) unless passed
-    end
+    passed = !!flexible_assert(lhs, rhs, "[lhs] < [rhs]")
+    raise InlineTestFailure.new(@@method_being_tested, 'assert_less_than', lhs, rhs, description) unless passed
+    
+    passed
   end
 
   def assert_greater_than lhs, rhs, description = ''
-    passed = flexible_assert lhs, rhs, "[lhs] > [rhs]"
-    if passed
-      true
-    else
-      raise InlineTestFailure.new(@@method_being_tested, 'assert_greater_than', lhs, rhs, description) unless passed
-    end
+    passed = !!flexible_assert(lhs, rhs, "[lhs] > [rhs]")
+    raise InlineTestFailure.new(@@method_being_tested, 'assert_greater_than', lhs, rhs, description) unless passed
+    
+    passed
   end
 
   def assert_divisible_by lhs, rhs, description = ''
-    passed = flexible_assert lhs, rhs, "[lhs] % [rhs] == 0"
-    if passed
-      true
-    else
-      raise InlineTestFailure.new(@@method_being_tested, 'assert_divisible_by', lhs, rhs, description) unless passed
-    end
+    passed = !!flexible_assert(lhs, rhs, "[lhs] % [rhs] == 0")
+    raise InlineTestFailure.new(@@method_being_tested, 'assert_divisible_by', lhs, rhs, description) unless passed
+    
+    passed
   end
 
   # dirty hacks for global constants :(
@@ -91,7 +78,7 @@ module Kernel
 
   private
 
-  def flexible_assert lhs, rhs, assert_logic
+  def flexible_assert(lhs, rhs, assert_logic)
     lhs_values = lhs
     # todo: probably want a custom testresults class instead of hash
     lhs_values = lhs.values if lhs.is_a? Hash
@@ -104,7 +91,7 @@ module Kernel
     lhs_values.all? do |lhs|
       rhs_values.all? do |rhs|
         generated_source = assert_logic.gsub('[lhs]', lhs.to_s).gsub('[rhs]', rhs.to_s)
-        #puts generated_source
+        puts "Debug: Evaluating #{generated_source}"
         eval generated_source
       end
     end
