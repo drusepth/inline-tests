@@ -1,5 +1,3 @@
-require 'pry'
-
 module Kernel
   METHODS_WITH_INLINE_TESTS     = []
 
