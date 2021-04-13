@@ -31,8 +31,8 @@ end
 
 ## Fuzzy testing
 
-This library also supports fuzzy testing. To use it, define a variable (`this`) on your tests block and pass a _range_ as
-a parameter using square brackets (`[` `]`) instead of parentheses. Square brackets can also be used with non-range values.
+This library also supports fuzzy testing. To use it, define a variable (e.g. `this` below) on your tests block and pass a _range_ for
+any parameter using square brackets (`[` `]`) instead of parentheses. Square brackets can also be used with non-range values.
 
 For example,
 ```ruby
