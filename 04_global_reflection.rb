@@ -91,7 +91,7 @@ module Kernel
     lhs_values.all? do |lhs|
       rhs_values.all? do |rhs|
         generated_source = assert_logic.gsub('[lhs]', lhs.to_s).gsub('[rhs]', rhs.to_s)
-        puts "Debug: Evaluating #{generated_source}"
+        # puts "Debug: Evaluating #{generated_source}"
         eval generated_source
       end
     end

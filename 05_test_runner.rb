@@ -39,4 +39,6 @@ class InlineTests
   end
 end
 
+puts "List of methods with inline tests:"
+puts InlineTests.tested_methods
 puts InlineTests.run!
