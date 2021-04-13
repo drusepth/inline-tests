@@ -15,7 +15,7 @@ def integer_division(x, y)
 end
 ```
 
-This is what that method might look like with inline tests:
+This is what that method could look like with inline tests:
 ```ruby
 tested def integer_division(x, y)
   return Float::INFINITY if y.zero?
@@ -29,7 +29,8 @@ tests do
 end
 ```
 
-You can also flag methods that need tests but don't have them yet with the `untested` prefix. For example:
+You can also flag methods that need tests but don't have them yet with the `untested` prefix. This does nothing but make
+methods easily-greppable for you or your team itchin' to write some much-needed tests.
 ```ruby
 untested def integer_division(x, y)
   return Float::INFINITY if y.zero?
