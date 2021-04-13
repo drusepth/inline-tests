@@ -1,15 +1,11 @@
 class InlineTests
-  def self.tested_methods
-    METHODS_WITH_INLINE_TESTS
-  end
-
   def self.run!
     test_passes = 0
     test_fails  = 0
 
     puts "Starting inline test suite:"
     all_tests_start_time = Time.now
-    tested_methods.select do |method|
+    METHODS_WITH_INLINE_TESTS.each do |method|
       # Kernel.class_variable_set(:@@method_being_tested, method)
       
       method_signature = if method.receiver.class.name === Object.name
@@ -46,7 +42,7 @@ class InlineTests
 
     # Print overall test results & stats
     # print_results(method_passing, method_errors)
-    puts "#{tested_methods.count} inline tests ran in #{format_tiny_time all_tests_end_time - all_tests_start_time} seconds."
+    puts "#{METHODS_WITH_INLINE_TESTS.count} inline tests ran in #{format_tiny_time all_tests_end_time - all_tests_start_time} seconds."
     puts "  #{test_passes} PASSED"
     puts "  #{test_fails} FAILS"
   end
